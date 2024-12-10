@@ -37,10 +37,11 @@ Once uploaded to the FPGA, input your sequences followed by *char_end* to decode
 
 ## OVERVIEW OF THE CODE STRUCTURE
 
-The code structure is fairly simple. The top module, *`top.v`*, connects all the sub-modules together. There are 3 sub-modules called in the top module:  
+The code structure is fairly simple. The top module, *`top.v`*, connects all the sub-modules together. There are 4 sub-modules called in the top module:  
 - *`morse_decoder`*  
 - *`vga_controller`*  
-- *`ascii_test`*  
+- *`ascii_test`*
+- *`ascii_rom`*  
 
 ### Sub-Module Responsibilities:
 1. **`morse_decoder`**:  
@@ -50,7 +51,9 @@ The code structure is fairly simple. The top module, *`top.v`*, connects all the
    Generates the VGA signals (*h-sync, v-sync, video_on, x, and y signals*).  
 
 3. **`ascii_test`**:  
-   Takes the ASCII hex number and VGA signals (excluding *h-sync* and *v-sync*) to generate the 12-bit RGB signal as output.  
+   Handles the rendering of ASCII characters on a VGA screen by determining character placement, fetching bitmap data, and outputting appropriate RGB values for text and background.
+4. **`ascii_rom`**:  
+   stores the 8x16 pixel patterns for ASCII characters and provides the appropriate row of pixel data for a given character.
 
 ### Top Module Inputs:
 - **dot**  
