@@ -1,76 +1,85 @@
-# Morse Decoder
+# MORSE DECODER
 
-## Team Members
+## Team Members:
 - Parth Prajapati  
 - Arav Tyagi  
 - Karim Elzokm  
 - Ksenia Suglobuva  
 
-*Link to Project Video*  
+**Link to Project Video**  
 
 ---
 
-## **Overview of the Project**
+## OVERVIEW OF THE PROJECT
 
-Our *Morse Code Decoder* project is designed to decode Morse code signals into ASCII characters in real time. The system utilizes four input buttons:
-- One for dots (*dot*),
-- One for dashes (*dash*),
-- One to mark the end of a character sequence (*char_end*), and
-- One for resetting the input (*reset*).
+Our *Morse Code Decoder* project is designed to decode Morse code signals into ASCII characters in real time. The system utilizes four input buttons: one for dots (*dot*), one for dashes (*dash*), one to mark the end of a character sequence (*char_end*), and one for resetting the input (*reset*). The decoded characters are displayed on a VGA screen, ensuring clear and concise output.
 
-The decoded characters are displayed on a VGA screen, ensuring clear and concise output. The decoder module processes button inputs using a state-based approach, appending bits for dots and dashes to build the Morse code sequence, and triggers decoding when the *end-of-sequence* button is pressed. 
-
-The design incorporates mechanisms to avoid duplicate signal counts and accurately detect input transitions. The VGA display is integrated to show the decoded ASCII characters, with the current implementation displaying one character at a time in the center of the screen—similar to decoding Morse code manually.
+The decoder module processes button inputs using a state-based approach, appending bits for dots and dashes to build the Morse code sequence, and triggers decoding when the *end-of-sequence* button is pressed. The design incorporates mechanisms to avoid duplicate signal counts and accurately detect input transitions. The VGA display is integrated to show the decoded ASCII characters, with the current implementation displaying one character at a time in the center of the screen, similar to decoding Morse code manually.
 
 ---
 
-## **How to Run Your Project**
+## HOW TO RUN YOUR PROJECT
 
-1. Set `top.v` as the top module of the hierarchy.
-2. Run synthesis, implementation, and generate the bitstream for this file.
-3. Upload the bitstream onto the FPGA.
-4. Use the buttons on the FPGA to control the characters you want to display. The button assignments are defined in the constraints file (included in the project files):
-   - `dot`: Button Up  
-   - `dash`: Button Right  
-   - `char_end`: Button Left  
-   - `reset`: Switch 1  
+1. Set *`top.v`* as the top of the hierarchy.  
+2. Run synthesis, implementation, and generate a bitstream for this file.  
+3. Upload the bitstream onto the FPGA.  
+4. Use the buttons on the FPGA to control the characters you want to display.  
 
-Once uploaded to the FPGA, you can input your Morse sequences followed by `char_end` to decode your message!
+### Button Mapping (set in the constraints file):
+- **Dot**: Button Up  
+- **Dash**: Button Right  
+- **Char_end**: Button Left  
+- **Reset**: Switch 1  
 
----
-
-## **Overview of the Code Structure**
-
-The code structure is simple and modular. The top module, `top.v`, connects all the sub-modules together. It consists of three sub-modules:
-- **`morse_decoder`**: Receives dot and dash sequences (followed by `char_end`) and outputs the corresponding ASCII hex code.
-- **`vga_controller`**: Generates the VGA signals (`h-sync`, `v-sync`, `video_on`, `x`, and `y`).
-- **`ascii_test`**: Generates the 12-bit RGB output based on the ASCII hex code and VGA signals.
-
-### Inputs and Outputs of the Top Module:
-**Inputs**:
-- `dot`
-- `dash`
-- `reset`
-- `clk`
-- `char_end`
-
-**Outputs**:
-- `RGB`
-- `h-sync`
-- `v-sync`
+Once uploaded to the FPGA, input your sequences followed by *char_end* to decode your message!
 
 ---
 
-## **Operation of `morse_decoder` Module**
+## OVERVIEW OF THE CODE STRUCTURE
 
-The `morse_decoder` module processes the sequence of dots and dashes based on transitions from low to high (detected using previous states `dot_prev` and `dash_prev`). Dots are assigned a value of `0` and dashes are assigned a value of `1`. These values are appended to an intermediate variable, `morse_sequence`.
+The code structure is fairly simple. The top module, *`top.v`*, connects all the sub-modules together. There are 3 sub-modules called in the top module:  
+- *`morse_decoder`*  
+- *`vga_controller`*  
+- *`ascii_test`*  
 
-A counter, `bit_count`, differentiates patterns (e.g., 2 dots vs. 4 dots) based on the number of inputs. When `char_end` goes high, the following sequence occurs:
-1. `bit_count` is used to filter the sequence.
-2. A case statement matches `morse_sequence` to the corresponding ASCII character.
+### Sub-Module Responsibilities:
+1. **`morse_decoder`**:  
+   Responsible for receiving *dot* and *dash* sequences (followed by *char_end*) and outputting the ASCII hex number for the corresponding character.  
 
-The ASCII hex code is assigned to the output register `ascii_char`, which is passed to the top module for display through the VGA.
+2. **`vga_controller`**:  
+   Generates the VGA signals (*h-sync, v-sync, video_on, x, and y signals*).  
 
-This design allows for easy expansion by adding more Morse sequences to the decoding library in the case statement.
+3. **`ascii_test`**:  
+   Takes the ASCII hex number and VGA signals (excluding *h-sync* and *v-sync*) to generate the 12-bit RGB signal as output.  
+
+### Top Module Inputs:
+- **dot**  
+- **dash**  
+- **reset**  
+- **clk**  
+- **char_end**  
+
+### Top Module Outputs:
+- **RGB**  
+- **h-sync**  
+- **v-sync**  
 
 ---
+
+## OPERATION OF `morse_decoder` MODULE
+
+The *`morse_decoder`* module processes the sequence of dots and dashes based on input transitions from *low to high*. This is managed using the previous states *`dot_prev`* and *`dash_prev`*.  
+
+### Key Components:
+1. **`morse_sequence`**:  
+   Dots are assigned as 0s, and dashes as 1s, and appended into this variable.  
+
+2. **`bit_count`**:  
+   A counter to differentiate similar patterns (e.g., 2 dots vs. 4 dots) based on the number of inputs pressed.  
+
+3. **Decoding Process**:  
+   - When *`char_end`* is high, the module filters sequences by *`bit_count`* and assigns ASCII hex numbers to the sequences via an `if` statement and a `case` statement.  
+   - This section of the code serves as the Morse sequence-to-ASCII library. Additional characters can be easily added here.  
+
+4. **Output Register**:  
+   The ASCII hex number is assigned to the register *`ascii_char`*, which is used by the top module to display the character through VGA.  
