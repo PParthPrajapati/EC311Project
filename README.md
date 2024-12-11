@@ -86,4 +86,6 @@ The *`morse_decoder`* module processes the sequence of dots and dashes based on 
    - This section of the code serves as the Morse sequence-to-ASCII library. Additional characters can be easily added here.  
 
 4. **Output Register**:  
-   The ASCII hex number is assigned to the register *`ascii_char`*, which is used by the top module to display the character through VGA.  
+   The ASCII hex number is assigned to the register *`ascii_char`*, which is used by the top module to display the character through VGA.
+
+   (Also we have decided to discard the *valid* output functionality as it was mainly useful for non-VGA uses)
