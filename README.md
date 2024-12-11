@@ -53,7 +53,7 @@ The code structure is fairly simple. The top module, *`top.v`*, connects all the
 3. **`ascii_test`**:  
    Handles the rendering of ASCII characters on a VGA screen by determining character placement, fetching bitmap data, and outputting appropriate RGB values for text and background.
 4. **`ascii_rom`**:  
-   stores the 8x16 pixel patterns for ASCII characters and provides the appropriate row of pixel data for a given character.
+   Stores the 8x16 pixel patterns for ASCII characters. Using the character’s ASCII code and the row index, it outputs the corresponding row data to render the character’s bitmap.
 
 ### Top Module Inputs:
 - **dot**  
@@ -64,8 +64,8 @@ The code structure is fairly simple. The top module, *`top.v`*, connects all the
 
 ### Top Module Outputs:
 - **RGB**  
-- **h-sync**  
-- **v-sync**  
+- **hsync**  
+- **vsync**  
 
 ---
 
